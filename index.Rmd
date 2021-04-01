@@ -14,10 +14,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r gapminder}
 library(ggplot2)
 library(gganimate)
-install.packages("gapminder")
-install.packages("gganimate")
+
 theme_set(theme_bw())
-install.packages(gganimate)
+
 
 library(gapminder)
 head(gapminder)
