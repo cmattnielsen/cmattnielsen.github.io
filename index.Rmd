@@ -43,5 +43,27 @@ p + transition_time(year) +
   labs(title = "Year: {frame_time}") +
   view_follow(fixed_y = TRUE)
 
+library(gifski)
 
+install.packages("gifski")
+
+install.packages("contrib.url")
+library(contrib.url)
+!["Really cute dog"]("./Jackson-1.jpg")
 ```
+
+
+
+Final Project Sources
+
+
+As of January 2017, the OpenFlights Airports Database contains over 10,000 airport
+
+Project outline
+
+  -Airport volume
+  -Traffic through a certain airport or path
+  -Path of a single airline over a year
+  -Most popular vs least popular destinations
+
+https://openflights.org/data.html
