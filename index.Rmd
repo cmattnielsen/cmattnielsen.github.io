@@ -49,7 +49,7 @@ install.packages("gifski")
 
 install.packages("contrib.url")
 library(contrib.url)
-!["Really cute dog"]("./Jackson-1.jpg")
+!["Really cute dog]("../Jackson-1.jpg")
 ```
 
 
