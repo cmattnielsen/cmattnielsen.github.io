@@ -1,0 +1,138 @@
+---
+title: "Final Project"
+output: 
+  html_document: 
+    theme: simplex
+    highlight: espresso
+---
+
+```{r setup, include=FALSE , mirror=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(shiny)
+library(tidyverse)
+library(leaflet)
+library(leaflet.extras)
+install.packages("contrib.url")
+install.packages("ddply")
+library(data.table)
+library(ggmap)
+library(plyr)
+library(ddply)
+library(plyr)
+library(maps)
+library(geosphere)
+
+load("data/airports.Rdata")
+load("./data/airlines.Rdata")
+load("data/routes.Rdata")
+load("data/top50AirlinesRoutes.Rdata")
+load("data/countries.Rdata")
+load("data/countries.bounds.Rdata")
+
+# API key
+register_google(key = "[AIzaSyAi3Ut72aLygJx5VKCldrZ8a3OpZ_3YMo8]", write = TRUE)
+
+
+
+```
+
+## R Markdown
+
+This project explores a narrow but vast part of the Open Flights data. https://openflights.org/data.html is a free, open, and easily accessible data base with documentation dealing in the airline and travel sectors. This project explores the flights leaving two airports as well as cleaning, tidying, and managing large data sets. As well as using many of these packages for the first time, I also needed a Google API key which lead me down the API rabbit hole. 
+
+
+
+This is the code to clean the data, and join it together to be workable. By linking the different columns in differing data sets, it creates one massive, but joined and in doing so, searchable data frame.
+```{Cleaning}
+airports <- airports %>% 
+  mutate(IATA_SOURCE = IATA,
+         IATA_DEST = IATA)
+
+routes <- routes %>% 
+  rename(IATA_SOURCE = Source_airport,
+         IATA_DEST = Destination_airport) 
+
+source <- full_join(routes,airports,by=c("IATA_SOURCE")) %>% 
+  mutate(Type = "SOURCE")
+dest <- full_join(routes,airports,by=c("IATA_DEST")) %>% 
+  mutate(Type = "DEST")
+
+full <- full_join(source,dest)
+
+ggplot(full,aes(x=IATA_SOURCE,fill=Type)) +
+  geom_bar() + lims(y=c(0,5000))
+
+full$Country %>% table() %>% as.data.frame() %>% arrange(desc(Freq))
+
+```
+
+## Flights out of Jorge Chavez in Lima Peru
+
+
+```{r pressure, echo=FALSE}
+#peru airports Chavez
+
+
+
+peruairports <- filter(airports, Latitude < 45)
+peruairports <- filter(airports, Longitude > -130)
+peruairports <- filter(peruairports, IATA!="LIM")
+LIM <- filter(airports, IATA=="LIM")
+
+map("world", regions=c("Brazil", "Uruguay", "Argentina", "French Guiana", "Suriname", "Colombia", "Venezuela",
+                       "Bolivia", "Ecuador", "Chile", "Paraguay", "Peru", "Guyana", "Panama", "Costa Rica", 
+                       "Nicaragua", "Honduras", "El Salvador", "Belize", "Guatemala", "Mexico", "Trinidad and Tobago",
+                       "Caribe", "Puerto Rico", "Dominican Republic", "Haiti", "Jamaica", "Cuba", "Bahamas", "Antiles",
+                       "Dominica", "Saba"), fill=T, col="grey8", bg="grey15")
+points(peruairports$Longitude,peruairports$Latitude, pch=3, cex=0.1, col="chocolate1")
+
+
+
+for (i in (1:dim(peruairports)[1])) { 
+  inter <- gcIntermediate(c(LIM$Longitude[1], LIM$Latitude[1]), c(peruairports$Longitude[i], peruairports$Latitude[i]), n=1)
+  lines(inter, lwd=0.1, col="turquoise2")    
+}
+
+
+```
+
+
+## Flights out of O'Hare Intl in Chicago Illinois
+
+
+```{r pressure, echo=FALSE}
+# Chicago OHare 
+
+
+usairports <- filter(airports, Latitude < 48.5)
+usairports <- filter(usairports, Longitude > -130)
+usairports <- filter(usairports, IATA!="ORD") #filter out jfk
+ORD <- filter(airports, IATA=="ORD") #separate df for jfk
+
+
+
+
+
+map("world", regions=c("usa"), fill=T, col="grey8", bg="grey15", ylim=c(21.0,50.0), xlim=c(-130.0,-65.0))
+points(usairports$Longitude,usairports$Latitude, pch=3, cex=0.1, col="chocolate1")
+
+
+
+
+for (i in (1:dim(usairports)[1])) { 
+  inter <- gcIntermediate(c(ORD$Longitude[1], ORD$Latitude[1]), c(usairports$Longitude[i], usairports$Latitude[i]), n=100)
+  lines(inter, lwd=0.1, col="turquoise2")    
+}
+
+
+
+
+
+
+
+
+
+
+
+```
+
