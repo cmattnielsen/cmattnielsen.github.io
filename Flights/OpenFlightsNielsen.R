@@ -4,11 +4,6 @@ library(leaflet)
 library(leaflet.extras)
 library(data.table)
 library(ggmap)
-library(plyr)
-install.packages(ggmap)
-library(ddply)
-install.packages("geosphere")
-library(plyr)
 library(maps)
 library(geosphere)
 
@@ -28,34 +23,25 @@ register_google(key = "[AIzaSyAi3Ut72aLygJx5VKCldrZ8a3OpZ_3YMo8]", write = TRUE)
 airlines_airports <- full_join(airlines,airports,by="Country")
 countries_airlines_airports <- full_join(airlines_airports,countries,by="Country")
 
-
+head(airports)
 
 airports <- airports %>% 
   mutate(IATA_SOURCE = IATA,
          IATA_DEST = IATA)
 
-
-
 routes <- routes %>% 
   rename(IATA_SOURCE = Source_airport,
          IATA_DEST = Destination_airport) 
-
-
-
 
 source <- full_join(routes,airports,by=c("IATA_SOURCE")) %>% 
   mutate(Type = "SOURCE")
 dest <- full_join(routes,airports,by=c("IATA_DEST")) %>% 
   mutate(Type = "DEST")
 
-
-
 full <- full_join(source,dest)
-
 
 ggplot(full,aes(x=IATA_SOURCE,fill=Type)) +
   geom_bar() + lims(y=c(0,5000))
-
 
 full$Country %>% table() %>% as.data.frame() %>% arrange(desc(Freq))
 
@@ -198,7 +184,7 @@ points(peruairports$Longitude,peruairports$Latitude, pch=3, cex=0.1, col="chocol
 
 
 for (i in (1:dim(peruairports)[1])) { 
-  inter <- gcIntermediate(c(LIM$Longitude[1], LIM$Latitude[1]), c(peruairports$Longitude[i], peruairports$Latitude[i]), n=1)
+  inter <- gcIntermediate(c(LIM$Longitude[1], LIM$Latitude[1]), c(peruairports$Longitude[i], peruairports$Latitude[i]), n=100)
   lines(inter, lwd=0.1, col="turquoise2")    
 }
 
@@ -227,16 +213,25 @@ points(usairports$Longitude,usairports$Latitude, pch=3, cex=0.1, col="chocolate1
 
 
 
-
 for (i in (1:dim(usairports)[1])) { 
-  inter <- gcIntermediate(c(ORD$Longitude[1], ORD$Latitude[1]), c(usairports$Longitude[i], usairports$Latitude[i]), n=100)
-  lines(inter, lwd=0.1, col="turquoise2")    
+inter <- gcIntermediate(c(ORD$Longitude[1], ORD$Latitude[1]), c(usairports$Longitude[i], usairports$Latitude[i]), n=100)
+lines(inter, lwd=0.1, col="turquoise2")    
 }
 
 
 
 
 
+
+for (i in (1:dim(usairports)[1])) { 
+inter <- gcIntermediate(c(ORD$Longitude[1], ORD$Latitude[1]), c(usairports$Longitude[i], usairports$Latitude[i]), n=100)
+lines(inter, lwd=0.1, col="turquoise2")    
+}
+
+
+png(file="plot2")
+
+save
 
 
 

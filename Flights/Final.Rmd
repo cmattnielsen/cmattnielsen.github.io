@@ -12,13 +12,8 @@ library(shiny)
 library(tidyverse)
 library(leaflet)
 library(leaflet.extras)
-install.packages("contrib.url")
-install.packages("ddply")
 library(data.table)
 library(ggmap)
-library(plyr)
-library(ddply)
-library(plyr)
 library(maps)
 library(geosphere)
 
@@ -43,7 +38,7 @@ This project explores a narrow but vast part of the Open Flights data. https://o
 
 
 This is the code to clean the data, and join it together to be workable. By linking the different columns in differing data sets, it creates one massive, but joined and in doing so, searchable data frame.
-```{Cleaning}
+```{r Cleaning}
 airports <- airports %>% 
   mutate(IATA_SOURCE = IATA,
          IATA_DEST = IATA)
@@ -68,6 +63,7 @@ full$Country %>% table() %>% as.data.frame() %>% arrange(desc(Freq))
 
 ## Flights out of Jorge Chavez in Lima Peru
 
+The orange dots are airports, the blue lines are common routes between the two locations.
 
 ```{r pressure, echo=FALSE}
 #peru airports Chavez
@@ -95,12 +91,15 @@ for (i in (1:dim(peruairports)[1])) {
 
 
 ```
-
+![Flights out of Lima Peru](./Lima_Lines.png)
 
 ## Flights out of O'Hare Intl in Chicago Illinois
 
 
-```{r pressure, echo=FALSE}
+
+![Airports in the US](./US_Points2.png)
+
+```{r pressure2, echo=FALSE}
 # Chicago OHare 
 
 
