@@ -77,7 +77,7 @@ dest_by_country %>%
   filter(Country == "Peru")
 
 
-  ggplot(aes(x=Destinations)) +
+ggplot(aes(x=Destinations)) +
   geom_bar() +
   theme(axis.text.x = element_text(angle=60,hjust=1))
 
