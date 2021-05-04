@@ -55,7 +55,8 @@ dest <- full_join(routes,airports,by=c("IATA_DEST")) %>%
 full <- full_join(source,dest)
 
 ggplot(full,aes(x=IATA_SOURCE,fill=Type)) +
-  geom_bar() + lims(y=c(0,5000))
+  geom_bar() + lims(y=c(0,1000))
+
 
 full$Country %>% table() %>% as.data.frame() %>% arrange(desc(Freq))
 
